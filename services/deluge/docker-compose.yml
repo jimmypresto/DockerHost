@@ -1,0 +1,27 @@
+services:
+  deluge:
+    image: lscr.io/linuxserver/deluge:latest
+    container_name: deluge
+    environment:
+      - DELUGE_LISTEN=0.0.0.0
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Los_Angeles
+      - DELUGE_LOGLEVEL=info
+    volumes:
+      - c:/DockerHost/services/deluge:/config
+      - c:/DockerHost/downloads:/downloads
+    ports:
+      - 8112:8112
+      - 6881:6881
+      - 58846:58846
+    networks:
+      - openvpn_vpn_network
+    restart: unless-stopped
+networks:
+  openvpn_vpn_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/16
+          gateway: 172.28.0.2

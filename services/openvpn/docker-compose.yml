@@ -1,0 +1,35 @@
+services:
+  openvpn:
+    image: ubuntu:24.04
+    container_name: openvpn
+    stdin_open: true
+    tty: true
+    # Get the .ovpn file from the vpn vendor
+    # In the ovpn file, you should have this line for credentials
+    #    auth-user-pass password.txt
+    # The password.txt has two line for username/password, 600, in same directory as the ovpn file
+    # Once started, use the command in test.txt to verify
+    # The healthcheck section ensures kills insance when the openvpn session is lost, no leaks
+    command: /bin/sh -c "apt update && apt install -y openvpn net-tools dnsutils curl && cd /openvpn && openvpn /openvpn/de947.nordvpn.com.udp.ovpn"
+    healthcheck:
+      test: >
+        curl --silent ipinfo.io/$(dig +short myip.opendns.com @resolver1.opendns.com) | grep -v '"country": "US"'
+      interval: 3s
+      retries: 3
+      start_period: 5s
+      timeout: 4s
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+      - MKNOD
+    ports:
+      - 10022:22
+    volumes:
+      - c:/DockerHost/services/openvpn:/openvpn
+    networks:
+      - vpn_network
+    restart: unless-stopped
+networks:
+  vpn_network:
+    driver: bridge
