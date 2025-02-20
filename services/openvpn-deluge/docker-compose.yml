@@ -1,0 +1,40 @@
+services:
+  openvpn-deluge:
+    image: lscr.io/linuxserver/deluge:latest
+    container_name: openvpn-deluge
+    command: /bin/sh -c "apk update && apk add --no-cache openvpn net-tools bind-tools curl && cd /openvpn && openvpn /openvpn/de947.nordvpn.com.udp.ovpn"
+    healthcheck:
+      test: >
+        curl --silent ipinfo.io/$(dig +short myip.opendns.com @resolver1.opendns.com) | grep -v '"country": "US"'
+      interval: 120s
+      retries: 3
+      start_period: 5s
+      timeout: 10s
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+      - MKNOD
+    environment:
+      - DELUGE_LISTEN=0.0.0.0
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Los_Angeles
+      - DELUGE_LOGLEVEL=info
+    volumes:
+      - c:/DockerHost/services/openvpn-deluge:/config
+      - c:/DockerHost/downloads:/downloads
+      - c:/DockerHost/services/openvpn-deluge:/openvpn
+    ports:
+      - 8112:8112
+      - 6881:6881
+      - 58846:58846
+      - 10022:22
+    stdin_open: true
+    tty: true
+    networks:
+      - vpn_network
+    restart: unless-stopped
+networks:
+  vpn_network:
+    driver: bridge

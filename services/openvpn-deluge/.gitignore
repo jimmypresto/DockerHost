@@ -1,0 +1,14 @@
+auth
+core.conf
+deluged.log
+hostlist.conf
+icons
+plugins
+session.state
+session.state.bak
+ssl
+state
+test.txt
+torrents
+web.conf
+*.tmp
