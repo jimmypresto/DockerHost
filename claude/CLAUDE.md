@@ -8,31 +8,63 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 All host-specific configuration lives in `host.env`:
 - Remote host IP, port, username
-- Storage paths
+- Storage paths (`STORAGE_BASE`, `RUNS_STORAGE_PATH`)
 - SMB share details
 
-**For shell scripts**: Source `host.env` or use helper scripts in `scripts/`
-```bash
-source ~/gmktec/host.env
-$SSH_CMD kubectl get pods
+### Using DRY in Shell Commands
 
-# Or use helper scripts
-~/gmktec/scripts/remote.sh kubectl get pods
-~/gmktec/scripts/mount-smb.sh
-~/gmktec/scripts/resolve-host.sh --update  # Update IP if changed
+**Always source `host.env` before using variables:**
+```bash
+# Standard pattern for remote commands
+source ~/gmktec/host.env && ~/gmktec/scripts/remote.sh "cd ${STORAGE_BASE}/projects && git status"
+
+# Available variables after sourcing:
+# REMOTE_HOST, REMOTE_PORT, REMOTE_USER, STORAGE_BASE, RUNS_STORAGE_PATH, SSH_CMD
 ```
 
-**For Python code**: Import from `host_config`
+**Or use helper scripts directly:**
+```bash
+~/gmktec/scripts/remote.sh kubectl get pods    # Instead of ssh -p 10022 jimmy@...
+~/gmktec/scripts/mount-smb.sh                  # Instead of mount_smbfs ...
+~/gmktec/scripts/resolve-host.sh --update      # Update IP if WSL2 IP changed
+```
+
+### Helper Scripts Reference
+
+| Script | Purpose | Usage |
+|--------|---------|-------|
+| `remote.sh` | Execute command on remote host | `remote.sh "kubectl get pods"` |
+| `remote.sh -i` | Interactive SSH session | `remote.sh -i` |
+| `mount-smb.sh` | Mount SMB share | `mount-smb.sh` or `mount-smb.sh -u` (unmount) |
+| `resolve-host.sh` | Show/update host IP | `resolve-host.sh` or `resolve-host.sh --update` |
+
+### Updating host.env
+
+If host values change (e.g., WSL2 IP changes):
+
+```bash
+# Option 1: Auto-update IP via DNS
+~/gmktec/scripts/resolve-host.sh --update
+
+# Option 2: Manual edit
+vi ~/gmktec/host.env
+# Change REMOTE_HOST="new.ip.address"
+```
+
+### Using DRY in Python
+
 ```python
 from host_config import config
-ssh_cmd = f"ssh -p {config.REMOTE_PORT} {config.REMOTE_USER}@{config.REMOTE_HOST}"
-storage = config.RUNS_STORAGE_PATH
+print(config.REMOTE_HOST)        # 192.168.86.38
+print(config.RUNS_STORAGE_PATH)  # /mnt/d/DockerHost/claude/runs
+print(config.ssh_prefix)         # ssh -p 10022 jimmy@192.168.86.38
 ```
 
-**When modifying host-dependent code**:
-1. Check if value exists in `host.env` first
-2. If not, add it there rather than hardcoding
-3. Update `host_config.py` if adding new Python-accessible values
+### When Adding New Host-Dependent Values
+
+1. Add to `host.env` first
+2. Update `projects/template/host_config.py` to load it
+3. Use the variable/config instead of hardcoding
 
 ## Prerequisites
 
