@@ -5,7 +5,6 @@ runs/
 projects/
 
 # Local IDE/editor settings
-.claude/
 .vscode/
 .idea/
 
