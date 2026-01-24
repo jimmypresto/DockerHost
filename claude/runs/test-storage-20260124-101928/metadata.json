@@ -1,0 +1,17 @@
+{
+  "run_id": "test-storage-20260124-101928",
+  "job_name": "test-storage",
+  "status": "completed",
+  "created_at": "2026-01-24T10:19:29.553100",
+  "started_at": null,
+  "completed_at": "2026-01-24T10:20:07.569707",
+  "exit_code": null,
+  "outputs": {
+    "data_files": [
+      "results.txt"
+    ],
+    "log_files": [
+      "task.log"
+    ]
+  }
+}
