@@ -117,6 +117,15 @@ ssh -p 10022 jimmy@192.168.86.38 kubectl <command>
 | K8s Version | v1.34.1 |
 | Runtime | Docker 29.1.3 |
 
+**Important - Docker Desktop K8s paths**:
+- WSL2 sees Windows D: drive at: `/mnt/d/...`
+- Docker Desktop K8s hostPath uses: `/mnt/host/d/...`
+- These are different mounts - K8s job manifests MUST use `/mnt/host/d/...`
+
+**Requirements for Docker Desktop K8s**:
+1. Use Docker Desktop's built-in K8s (NOT Kind multi-node cluster)
+2. Enable file sharing: Settings → Resources → File Sharing → Add `D:\DockerHost`
+
 ## Projects Directory
 
 For K8s job runner template work, see the projects-specific documentation:
@@ -138,8 +147,11 @@ cd ~/gmktec/projects/template
 ### Job Run Storage
 
 Job outputs are stored at:
-- **K8s node**: `/mnt/d/DockerHost/claude/runs/{run-id}/`
+- **WSL2 (SSH)**: `/mnt/d/DockerHost/claude/runs/{run-id}/`
+- **K8s hostPath**: `/mnt/host/d/DockerHost/claude/runs/{run-id}/`
 - **Mac (via SMB)**: `~/gmktec/runs/{run-id}/`
+
+Note: `host.env` defines both `RUNS_STORAGE_PATH` (for WSL2) and `K8S_RUNS_STORAGE_PATH` (for K8s).
 
 ## Local Environment Setup
 
