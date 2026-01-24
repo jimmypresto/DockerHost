@@ -2,6 +2,38 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## DRY Policy (Don't Repeat Yourself)
+
+**Important**: Host-dependent values should NOT be hardcoded throughout the codebase.
+
+All host-specific configuration lives in `host.env`:
+- Remote host IP, port, username
+- Storage paths
+- SMB share details
+
+**For shell scripts**: Source `host.env` or use helper scripts in `scripts/`
+```bash
+source ~/gmktec/host.env
+$SSH_CMD kubectl get pods
+
+# Or use helper scripts
+~/gmktec/scripts/remote.sh kubectl get pods
+~/gmktec/scripts/mount-smb.sh
+~/gmktec/scripts/resolve-host.sh --update  # Update IP if changed
+```
+
+**For Python code**: Import from `host_config`
+```python
+from host_config import config
+ssh_cmd = f"ssh -p {config.REMOTE_PORT} {config.REMOTE_USER}@{config.REMOTE_HOST}"
+storage = config.RUNS_STORAGE_PATH
+```
+
+**When modifying host-dependent code**:
+1. Check if value exists in `host.env` first
+2. If not, add it there rather than hardcoding
+3. Update `host_config.py` if adding new Python-accessible values
+
 ## Prerequisites
 
 Before starting work in this directory, mount the Samba share:
