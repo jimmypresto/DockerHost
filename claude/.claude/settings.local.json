@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(kubectl cluster-info:*)",
+      "Bash(dig:*)",
+      "Bash(ping:*)",
+      "Bash(nc:*)",
+      "Bash(smbclient:*)",
+      "Bash(ssh:*)",
+      "Bash(ssh-add:*)",
+      "Bash(ls:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(python3:*)",
+      "Bash(chmod:*)",
+      "Bash(for f in \"deploy.py\" \"k8s/prefect\" \"k8s/configmaps\" \"prefect/flows/audit.py\" \"prefect/flows/progress.py\")",
+      "Bash(do [ -e \"/Users/jimmysun/gmktec/projects/template/$f\" ])",
+      "Bash(echo:*)",
+      "Bash(done)",
+      "Bash([ -f /Users/jimmysun/gmktec/projects/template/audit.log ])",
+      "Bash(test:*)",
+      "Bash(for file in \"k8s/namespace.yaml\" \"k8s/prometheus/pushgateway.yaml\" \"k8s/prometheus/prometheus.yaml\" \"k8s/prometheus/grafana.yaml\" \"k8s/prefect/postgres.yaml\" \"k8s/prefect/prefect-server.yaml\" \"k8s/job-template.yaml\" \"k8s/test-job.yaml\" \"k8s/configmaps/scripts-cm.yaml\")",
+      "Bash(do if [ -f \"$file\" ])",
+      "Bash(then echo \"✓ $file\")",
+      "Bash(else echo \"✗ MISSING: $file\")",
+      "Bash(fi)",
+      "Bash(for:*)",
+      "Bash(./deploy.py:*)",
+      "Bash(mount:*)",
+      "Bash(umount:*)",
+      "Bash(mount_smbfs:*)",
+      "Bash(diskutil unmount:*)"
+    ]
+  }
+}
