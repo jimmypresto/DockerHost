@@ -1,0 +1,13 @@
+# Job run outputs (data, not code)
+runs/
+
+# Embedded git repos
+projects/
+
+# Local IDE/editor settings
+.claude/
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
