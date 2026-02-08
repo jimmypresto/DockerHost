@@ -1,0 +1,14 @@
+{
+  "name": "backup-claude-config",
+  "displayName": "Backup Claude Configuration",
+  "description": "Back up Claude skills and settings to SMB share with intelligent merging",
+  "version": "1.0.0",
+  "author": "Claude",
+  "tags": ["backup", "configuration", "skills", "settings", "smb", "sync"],
+  "invocationPatterns": [
+    "backup-claude-config",
+    "backup claude configuration",
+    "backup skills and settings",
+    "sync claude config"
+  ]
+}

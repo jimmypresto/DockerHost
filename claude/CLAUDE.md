@@ -95,7 +95,7 @@ mount_smbfs //GUEST:@192.168.86.38/DockerHost/claude ~/gmktec
 ssh -p 10022 jimmy@192.168.86.38
 ```
 
-**Troubleshooting**: If SSH connection fails, the WSL2 IP may have changed. See [WSL2-SSH-PORTPROXY.md](WSL2-SSH-PORTPROXY.md) for fix.
+**Troubleshooting**: If SSH connection fails, the WSL2 IP may have changed. See [WSL2-SSH-PORTPROXY.md](docs/WSL2-SSH-PORTPROXY.md) for fix.
 
 ### Samba Share
 

@@ -1,22 +1,4 @@
 {
-  "mcpServers": {
-    "filesystem": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "/Users/jimmy/Downloads/youtube",
-        "/Users/jimmy/Music"
-      ]
-    },
-    "fetch": {
-      "command": "uvx",
-      "args": [
-        "mcp-server-fetch"
-      ]
-    }
-  },
-  "model": "sonnet",
   "permissions": {
     "allow": [
       "Bash(ssh *)",

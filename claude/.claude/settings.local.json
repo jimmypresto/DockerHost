@@ -29,7 +29,12 @@
       "Bash(mount:*)",
       "Bash(umount:*)",
       "Bash(mount_smbfs:*)",
-      "Bash(diskutil unmount:*)"
+      "Bash(diskutil unmount:*)",
+      "WebSearch",
+      "Bash(python:*)",
+      "Bash(pkill:*)",
+      "Bash(git check-ignore:*)",
+      "Bash(git ls-tree:*)"
     ]
   }
 }

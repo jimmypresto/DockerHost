@@ -1,0 +1,13 @@
+{
+  "name": "youtube-audio-download",
+  "displayName": "YouTube Audio Download",
+  "description": "Download and enhance YouTube audio with professional stage sound effects",
+  "version": "1.0.0",
+  "author": "Claude",
+  "tags": ["youtube", "audio", "enhancement", "mp3", "download"],
+  "invocationPatterns": [
+    "youtube-audio-download",
+    "download youtube audio",
+    "download youtube playlist audio"
+  ]
+}

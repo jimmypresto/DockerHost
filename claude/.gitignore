@@ -10,3 +10,7 @@ projects/
 
 # macOS
 .DS_Store
+../youtube
+../downloads
+../services
+../.DS_Store
