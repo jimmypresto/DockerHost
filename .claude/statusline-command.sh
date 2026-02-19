@@ -13,13 +13,9 @@ vim_mode=$(echo "$input" | jq -r '.vim.mode // empty')
 agent_name=$(echo "$input" | jq -r '.agent.name // empty')
 session_name=$(echo "$input" | jq -r '.session_name // empty')
 
-# --- Shorten the directory (replace $HOME with ~) ---
-home_dir="$HOME"
-if [ -n "$home_dir" ] && [ -n "$cwd" ]; then
-  short_cwd="${cwd/#$home_dir/\~}"
-else
-  short_cwd="${cwd:-$(pwd)}"
-fi
+# --- Shorten the directory (show only the basename of the current folder) ---
+effective_cwd="${cwd:-$(pwd)}"
+short_cwd=$(basename "$effective_cwd")
 
 # --- Git branch (best-effort, skip locks) ---
 git_branch=""
