@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker compose:*)",
+      "WebFetch(domain:docs.frigate.video)"
+    ]
+  }
+}
