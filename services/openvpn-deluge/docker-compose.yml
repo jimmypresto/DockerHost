@@ -29,7 +29,7 @@ services:
       - 8112:8112
       - 6881:6881
       - 58846:58846
-      - 10022:22
+      - 10023:22
     stdin_open: true
     tty: true
     networks:

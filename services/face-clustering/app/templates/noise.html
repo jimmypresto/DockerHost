@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unassigned Faces</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: #0f0f0f; color: #e0e0e0; padding: 24px; padding-bottom: 80px; }
+    a { color: #6ea8fe; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .back { font-size: 0.85rem; margin-bottom: 16px; display: block; }
+    h1 { font-size: 1.4rem; margin-bottom: 6px; }
+    .sub { font-size: 0.85rem; color: #888; margin-bottom: 24px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+    .snap { background: #1a1a1a; border: 2px solid #2a2a2a; border-radius: 6px; overflow: hidden; cursor: pointer; transition: border-color 0.1s; }
+    .snap.selected { border-color: #2563eb; }
+    .snap .img-wrap { position: relative; }
+    .snap img { width: 100%; height: 150px; object-fit: cover; object-position: top; display: block; }
+    .snap .cb { position: absolute; top: 6px; left: 6px; width: 18px; height: 18px; accent-color: #2563eb; cursor: pointer; }
+    .snap .open { position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,0.55); color: #aaa; font-size: 0.7rem; padding: 2px 5px; border-radius: 3px; text-decoration: none; }
+    .snap .open:hover { color: #fff; }
+    .snap .meta { padding: 5px 8px; font-size: 0.75rem; color: #555; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .snap .move { display: flex; gap: 4px; padding: 6px 8px; border-top: 1px solid #222; }
+    .snap .move select { flex: 1; background: #111; border: 1px solid #333; color: #e0e0e0; padding: 3px 6px; border-radius: 4px; font-size: 0.75rem; }
+    .snap .move button { background: #1e3a5f; color: #6ea8fe; border: 1px solid #2a4a7f; padding: 3px 8px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; white-space: nowrap; }
+    .snap .move button:hover { background: #2563eb; color: #fff; }
+
+    #bulk-bar {
+      display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      background: #1a1a1a; border: 1px solid #2a4a7f; border-radius: 10px;
+      padding: 12px 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.6);
+      align-items: center; gap: 12px; z-index: 100;
+    }
+    #bulk-bar.visible { display: flex; }
+    #bulk-bar span { font-size: 0.9rem; color: #aaa; white-space: nowrap; }
+    #bulk-bar select { background: #111; border: 1px solid #333; color: #e0e0e0; padding: 6px 10px; border-radius: 4px; font-size: 0.9rem; }
+    #bulk-bar button { border: none; padding: 7px 16px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
+    #bulk-bar .move-btn { background: #2563eb; color: #fff; }
+    #bulk-bar .move-btn:hover { background: #1d4ed8; }
+    #bulk-bar .cancel { background: #333; color: #e0e0e0; }
+    #bulk-bar .cancel:hover { background: #444; }
+
+    .empty { color: #555; text-align: center; padding: 60px; }
+  </style>
+</head>
+<body>
+  <a class="back" href="/">← All clusters</a>
+  <h1>Unassigned Faces</h1>
+  <p class="sub">
+    {{ count }} face{% if count != 1 %}s{% endif %} not assigned to any cluster.
+    Try <a href="/reprocess">↺ reprocessing</a> after adding more snapshots.
+  </p>
+
+  {% if snapshots %}
+  <div class="grid">
+    {% for s in snapshots %}
+    <div class="snap" id="snap-{{ s.id }}" onclick="toggleSelect({{ s.id }}, event)">
+      <div class="img-wrap">
+        <input class="cb" type="checkbox" id="cb-{{ s.id }}" onclick="toggleSelect({{ s.id }}, event)">
+        <img src="{{ s.url }}" alt="" loading="lazy">
+        <a class="open" href="{{ s.url }}" target="_blank" onclick="event.stopPropagation()">↗</a>
+      </div>
+      <div class="meta" title="{{ s.path }}">{{ s.path | replace('/data/snapshots/', '') }}</div>
+      {% if clusters %}
+      <div class="move" onclick="event.stopPropagation()">
+        <select id="move-{{ s.id }}">
+          {% for c in clusters %}
+          <option value="{{ c.id }}">→ {{ c.label }}</option>
+          {% endfor %}
+        </select>
+        <button onclick="moveSingle({{ s.id }})">Move</button>
+      </div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+  <div id="bulk-bar">
+    <span id="bulk-count">0 selected</span>
+    <select id="bulk-target">
+      {% for c in clusters %}
+      <option value="{{ c.id }}">→ {{ c.label }}</option>
+      {% endfor %}
+    </select>
+    <button class="move-btn" onclick="moveBulk()">Move</button>
+    <button class="cancel" onclick="clearSelection()">Cancel</button>
+  </div>
+
+  {% else %}
+  <div class="empty">No unassigned faces.</div>
+  {% endif %}
+
+  <script>
+    var selected = new Set();
+
+    function toggleSelect(id, e) {
+      if (e.target.tagName === 'A' || e.target.closest('.move')) return;
+      if (selected.has(id)) { selected.delete(id); } else { selected.add(id); }
+      document.getElementById('snap-' + id).classList.toggle('selected', selected.has(id));
+      document.getElementById('cb-' + id).checked = selected.has(id);
+      updateBar();
+    }
+
+    function updateBar() {
+      document.getElementById('bulk-count').textContent = selected.size + ' selected';
+      document.getElementById('bulk-bar').classList.toggle('visible', selected.size > 0);
+    }
+
+    function clearSelection() {
+      selected.forEach(function(id) {
+        document.getElementById('snap-' + id).classList.remove('selected');
+        document.getElementById('cb-' + id).checked = false;
+      });
+      selected.clear();
+      updateBar();
+    }
+
+    function moveSingle(snapId) {
+      var target = document.getElementById('move-' + snapId).value;
+      fetch('/snapshot/' + snapId + '/move/' + target + '?from_cluster=-1', {method: 'POST'})
+        .then(function() { window.location.reload(); });
+    }
+
+    function moveBulk() {
+      if (selected.size === 0) return;
+      var target = document.getElementById('bulk-target').value;
+      var form = document.createElement('form');
+      form.method = 'post';
+      form.action = '/snapshots/move';
+      function addField(name, val) {
+        var i = document.createElement('input');
+        i.type = 'hidden'; i.name = name; i.value = val;
+        form.appendChild(i);
+      }
+      selected.forEach(function(id) { addField('snapshot_ids', id); });
+      addField('target_cluster_id', target);
+      addField('from_cluster', -1);
+      document.body.appendChild(form);
+      form.submit();
+    }
+  </script>
+</body>
+</html>

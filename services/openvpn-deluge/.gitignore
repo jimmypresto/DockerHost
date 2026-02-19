@@ -12,3 +12,7 @@ test.txt
 torrents
 web.conf
 *.tmp
+*.bak
+*.pid
+*.ovpn
+password.txt

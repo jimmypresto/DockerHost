@@ -3,6 +3,10 @@ info
 .DS_Store
 downloads
 youtube
-services
+services/*
+!services/face-clustering
+!services/openvpn-deluge
+services/face-clustering/data/
+services/face-clustering/models/
 homeassistant
 claude/

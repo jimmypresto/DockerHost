@@ -1,0 +1,18 @@
+services:
+  face-clustering:
+    build: .
+    container_name: face-clustering
+    restart: unless-stopped
+    ports:
+      - "7070:7070"
+    volumes:
+      - /mnt/d/DockerHost/services/frigate/media/frigate/clips:/data/snapshots:ro
+      - /mnt/d/DockerHost/services/face-clustering/data:/data/db
+      - /mnt/d/DockerHost/services/face-clustering/models:/app/models
+    environment:
+      - SNAPSHOT_DIR=/data/snapshots
+      - DB_PATH=/data/db/faces.db
+      - PORT=7070
+      - MIN_CLUSTER_SIZE=3
+      - MIN_SAMPLES=2
+      - CLUSTER_EPSILON=0.35
