@@ -5,6 +5,12 @@
 - Docker volumes use `/mnt/d/DockerHost/...` paths (not Windows-style `c:/` or `d:/`)
 - `C:\DockerHost` is a symlink to `D:\DockerHost`
 
+## Git & GitHub
+- **Account**: jimmypresto
+- **Auth**: SSH key `~/.ssh/id_ed25519` for git operations
+- **gh CLI**: Authenticated via PAT token (HTTPS protocol)
+- **Git remote**: `git@github.com:jimmypresto/DockerHost.git`
+
 ## Key Rules
 - Follow the [debugging principles](docs/debugging-principles.md) — diagnose before fixing, change one thing at a time, preserve what works
 - LinuxServer.io images use s6-overlay: entrypoint is `/init`, do not call `/init` again in CMD
