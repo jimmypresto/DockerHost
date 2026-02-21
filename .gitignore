@@ -5,6 +5,8 @@ downloads
 youtube
 services/*
 !services/face-clustering
+!services/deluge
+!services/openvpn
 !services/openvpn-deluge
 services/face-clustering/data/
 services/face-clustering/models/

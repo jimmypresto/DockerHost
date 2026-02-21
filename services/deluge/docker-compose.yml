@@ -9,8 +9,8 @@ services:
       - TZ=America/Los_Angeles
       - DELUGE_LOGLEVEL=info
     volumes:
-      - c:/DockerHost/services/deluge:/config
-      - c:/DockerHost/downloads:/downloads
+      - /mnt/d/DockerHost/services/deluge:/config
+      - /mnt/d/DockerHost/downloads:/downloads
     ports:
       - 8112:8112
       - 6881:6881

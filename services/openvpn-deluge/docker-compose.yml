@@ -2,7 +2,7 @@ services:
   openvpn-deluge:
     image: lscr.io/linuxserver/deluge:latest
     container_name: openvpn-deluge
-    command: /bin/sh -c "apk update && apk add --no-cache openvpn net-tools bind-tools curl && cd /openvpn && openvpn /openvpn/de947.nordvpn.com.udp.ovpn"
+    command: /bin/sh -c "apk update && apk add --no-cache openvpn net-tools bind-tools curl && cd /openvpn && openvpn --config /openvpn/de947.nordvpn.com.udp.ovpn"
     healthcheck:
       test: >
         curl --silent ipinfo.io/$(dig +short myip.opendns.com @resolver1.opendns.com) | grep -v '"country": "US"'
@@ -22,13 +22,13 @@ services:
       - TZ=America/Los_Angeles
       - DELUGE_LOGLEVEL=info
     volumes:
-      - c:/DockerHost/services/openvpn-deluge:/config
-      - c:/DockerHost/downloads:/downloads
-      - c:/DockerHost/services/openvpn-deluge:/openvpn
+      - /mnt/d/DockerHost/services/openvpn-deluge:/config
+      - /mnt/d/DockerHost/downloads:/downloads
+      - /mnt/d/DockerHost/services/openvpn-deluge:/openvpn
     ports:
       - 8112:8112
       - 6881:6881
-      - 58846:58846
+      #- 58846:58846
       - 10023:22
     stdin_open: true
     tty: true
