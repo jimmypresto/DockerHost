@@ -5,8 +5,14 @@ downloads
 youtube
 services/*
 !services/face-clustering
+!services/deluge
+!services/openvpn
 !services/openvpn-deluge
 services/face-clustering/data/
 services/face-clustering/models/
 homeassistant
 claude/
+github/
+services/deluge/archive/
+services/deluge/*.bak
+services/openvpn-deluge/archive/

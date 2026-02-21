@@ -26,7 +26,7 @@ services:
     ports:
       - 10022:22
     volumes:
-      - c:/DockerHost/services/openvpn:/openvpn
+      - /mnt/d/DockerHost/services/openvpn:/openvpn
     networks:
       - vpn_network
     restart: unless-stopped
