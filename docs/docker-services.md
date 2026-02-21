@@ -1,6 +1,6 @@
 # Docker Services
 
-All services are under `/mnt/d/DockerHost/services/`. Volume paths are standardized to `/mnt/d/DockerHost/...`.
+All services are under `/mnt/d/DockerHost/services/`.
 
 ## Services
 
@@ -38,25 +38,3 @@ All services are under `/mnt/d/DockerHost/services/`. Volume paths are standardi
 | 6881 | TCP | openvpn-deluge | Torrent peer connections |
 | 10023 | TCP | openvpn-deluge | SSH |
 | 9443 | TCP | portainer | HTTPS web UI |
-
-### Example PowerShell command (run as Administrator)
-```powershell
-New-NetFirewallRule -DisplayName "Frigate WebRTC 8555" -Direction Inbound -Protocol TCP -LocalPort 8555 -Action Allow -Profile Any
-```
-
-For UDP:
-```powershell
-New-NetFirewallRule -DisplayName "Frigate WebRTC 8555 UDP" -Direction Inbound -Protocol UDP -LocalPort 8555 -Action Allow -Profile Any
-```
-
-## Notes
-
-### Docker Volume Paths
-- All compose files use WSL2-style paths: `/mnt/d/DockerHost/...`
-- Do NOT use Windows-style `c:/` or `d:/` paths — they fail under WSL2 Docker
-- `C:\DockerHost` is a symlink to `D:\DockerHost`, so both resolve to the same place
-
-### LinuxServer.io Images (deluge, openvpn-deluge)
-- Use s6-overlay init system: entrypoint is `/init`, which starts services
-- `command` (CMD) runs AFTER s6 starts services — do not call `/init` again in CMD
-- If CMD exits, the container shuts down — keep a foreground process running (e.g., openvpn without `--daemon`)

@@ -2,17 +2,12 @@
 
 ## Environment
 - Windows 11 host running WSL2 (Ubuntu 24.04)
-- Docker volumes use `/mnt/d/DockerHost/...` paths (not Windows-style `c:/` or `d:/`)
+- Docker volumes must use `/mnt/d/DockerHost/...` paths (not Windows-style `c:/` or `d:/`)
 - `C:\DockerHost` is a symlink to `D:\DockerHost`
 
-## Git & GitHub
-- **Account**: jimmypresto
-- **Auth**: SSH key `~/.ssh/id_ed25519` for git operations
-- **gh CLI**: Authenticated via PAT token (HTTPS protocol)
-- **Git remote**: `git@github.com:jimmypresto/DockerHost.git`
+## Doc Hygiene
+Before creating, modifying, or committing docs: remove content that covers general knowledge or things you can check live with a command. Keep only what's specific to this environment and can't be discovered programmatically.
 
-## Key Rules
-- Follow the [debugging principles](docs/debugging-principles.md) — diagnose before fixing, change one thing at a time, preserve what works
-- LinuxServer.io images use s6-overlay: entrypoint is `/init`, do not call `/init` again in CMD
-- See [docs/docker-services.md](docs/docker-services.md) for service inventory and firewall rules
-- See [docs/jimmy-gmktec-setup.md](docs/jimmy-gmktec-setup.md) for hardware/software details
+## Docs
+- [docs/docker-services.md](docs/docker-services.md) — service inventory and firewall rules
+- [docs/jimmy-gmktec-setup.md](docs/jimmy-gmktec-setup.md) — hardware and storage details
