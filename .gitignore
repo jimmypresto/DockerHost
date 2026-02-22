@@ -16,3 +16,4 @@ github/
 services/deluge/archive/
 services/deluge/*.bak
 services/openvpn-deluge/archive/
+session.sh
